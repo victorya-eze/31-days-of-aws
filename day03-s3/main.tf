@@ -2,20 +2,24 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_s3_bucket" "my_bucket" {
-  bucket = "day3-my-aws-bucket-${random_id.bucket_suffix.hex}"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-
-  tags = {
-    Name        = "Day3-S3-Bucket"
-    Environment = "Dev"
-  }
-}
-
 resource "random_id" "bucket_suffix" {
   byte_length = 4
+}
+
+resource "aws_s3_bucket" "example" {
+  bucket        = "day3-my-aws-bucket-${random_id.bucket_suffix.hex}"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_acl" "example" {
+  bucket = aws_s3_bucket.example.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_versioning" "versioning_example" {
+  bucket = aws_s3_bucket.example.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
