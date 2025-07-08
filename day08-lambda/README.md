@@ -1,12 +1,12 @@
-# Day 7 – AWS RDS
+# Day 8 – AWS Lambda
 
 This Terraform config includes:
 
 What You'll Learn
 
-- Setting up RDS database
-- use the existing vpc
-
+- A Node.js Lambda function (`index.js`)
+- An IAM role with `AWSLambdaBasicExecutionRole` permissions
+- A zipped Lambda function package (`lambda_function_payload.zip`)
 
 ## Usage
 
