@@ -2,7 +2,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_cognito_user_pool" "user_pool" {
+resource "aws_cognito_user_pool" "this" {
   name = "day25-user-pool"
 
   auto_verified_attributes = ["email"]
@@ -15,20 +15,32 @@ resource "aws_cognito_user_pool" "user_pool" {
     require_symbols   = false
   }
 
-  tags = {
-    Name = "Day25CognitoUserPool"
+  account_recovery_setting {
+    recovery_mechanism {
+      name     = "verified_email"
+      priority = 1
+    }
   }
 }
 
-resource "aws_cognito_user_pool_client" "user_pool_client" {
+resource "aws_cognito_user_pool_client" "this" {
   name         = "day25-user-pool-client"
-  user_pool_id = aws_cognito_user_pool.user_pool.id
-  generate_secret = false
+  user_pool_id = aws_cognito_user_pool.this.id
 
   explicit_auth_flows = [
     "ALLOW_USER_PASSWORD_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
+    "ALLOW_CUSTOM_AUTH",
     "ALLOW_USER_SRP_AUTH",
-    "ALLOW_CUSTOM_AUTH"
   ]
+
+  prevent_user_existence_errors = "ENABLED"
+}
+
+output "user_pool_id" {
+  value = aws_cognito_user_pool.this.id
+}
+
+output "user_pool_client_id" {
+  value = aws_cognito_user_pool_client.this.id
 }
